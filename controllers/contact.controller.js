@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import sgTransport from "nodemailer-sendgrid-transport";
 import dotenv from "dotenv";
 
 dotenv.config({ path: "./.env" });
@@ -15,25 +16,17 @@ export const sendContactEmail = async (req, res) => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.GOOGLE_EMAIL_HOST,
-      port: Number(process.env.GOOGLE_EMAIL_PORT),
-      secure: false,
-      auth: {
-        user: process.env.GOOGLE_EMAIL_USER,
-        pass: process.env.GOOGLE_APP_PASSWORD,
-      },
-    });
-    console.table({
-      host: process.env.GOOGLE_EMAIL_HOST,
-      port: process.env.GOOGLE_EMAIL_PORT,
-      user: process.env.GOOGLE_EMAIL_USER,
-      pass: process.env.GOOGLE_APP_PASSWORD,
-    });
+    const transporter = nodemailer.createTransport(
+      sgTransport({
+        auth: {
+          api_key: process.env.SENDGRID_API_KEY,
+        },
+      }),
+    );
 
     const mailOptions = {
-      from: `"Nihareeka Website" <${process.env.GOOGLE_EMAIL_USER}>`,
-      to: process.env.GOOGLE_EMAIL_USER,
+      from: `"Nihareeka Website" <${process.env.FROM_EMAIL}>`,
+      to: process.env.FROM_EMAIL,
       replyTo: `"${name}" <${email}>`,
       subject: `[Contact Form] ${subject}`,
       text: `New contact form submission\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`,

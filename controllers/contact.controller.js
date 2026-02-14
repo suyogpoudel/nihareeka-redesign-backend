@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
 
 export const sendContactEmail = async (req, res) => {
+  if (!req.body) {
+    return res.status(400).json({ error: "No request body received" });
+  }
+
   const { name, email, subject, message } = req.body;
 
   if (!name || !email || !subject || !message) {

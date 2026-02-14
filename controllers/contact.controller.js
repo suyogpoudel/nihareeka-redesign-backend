@@ -13,12 +13,18 @@ export const sendContactEmail = async (req, res) => {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.GOOGLE_EMAIL_HOST,
-      port: process.env.GOOGLE_EMAIL_PORT,
+      port: Number(process.env.GOOGLE_EMAIL_PORT),
       secure: false,
       auth: {
         user: process.env.GOOGLE_EMAIL_USER,
         pass: process.env.GOOGLE_APP_PASSWORD,
       },
+    });
+    console.table({
+      host: process.env.GOOGLE_EMAIL_HOST,
+      port: process.env.GOOGLE_EMAIL_PORT,
+      user: process.env.GOOGLE_EMAIL_USER,
+      pass: process.env.GOOGLE_APP_PASSWORD,
     });
 
     const mailOptions = {
